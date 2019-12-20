@@ -1,10 +1,11 @@
+using System.Linq;
 using System.Threading.Tasks;
 using OrchardCore.ContentManagement;
 using OrchardCore.Lists.Models;
 using OrchardCore.Tests.Apis.Context;
 using Xunit;
 
-namespace OrchardCore.Tests.Apis.GraphQL.Queries
+namespace OrchardCore.Tests.Apis.GraphQL
 {
     public class RecentBlogPostsQueryTests
     {
@@ -35,11 +36,12 @@ namespace OrchardCore.Tests.Apis.GraphQL.Queries
                     .Query("RecentBlogPosts", builder =>
                     {
                         builder
-                            .AddField("displayText");
+                            .WithField("displayText");
                     });
 
                 var nodes = result["data"]["recentBlogPosts"];
 
+                Assert.Equal(2, nodes.Count());
                 Assert.Equal("Some sorta blogpost in a Query!", nodes[0]["displayText"].ToString());
                 Assert.Equal("Man must explore, and this is exploration at its greatest", nodes[1]["displayText"].ToString());
             }

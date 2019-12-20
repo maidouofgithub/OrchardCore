@@ -8,10 +8,10 @@ using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.ContentManagement.Handlers;
 using OrchardCore.ContentTypes.Editors;
 using OrchardCore.Data.Migration;
-using OrchardCore.Templates.Module.Drivers;
-using OrchardCore.Templates.Module.Handlers;
-using OrchardCore.Templates.Module.Models;
-using OrchardCore.Templates.Module.Settings;
+using OrchardCore.Templates.Cms.Module.Drivers;
+using OrchardCore.Templates.Cms.Module.Handlers;
+using OrchardCore.Templates.Cms.Module.Models;
+using OrchardCore.Templates.Cms.Module.Settings;
 #endif
 using OrchardCore.Modules;
 
@@ -22,20 +22,20 @@ namespace OrchardCore.Templates.Cms.Module
         public override void ConfigureServices(IServiceCollection services)
         {
 #if (AddPart)
+            services.AddContentPart<MyTestPart>();
             services.AddScoped<IContentPartDisplayDriver, MyTestPartDisplayDriver>();
-            services.AddSingleton<ContentPart, MyTestPart>();
             services.AddScoped<IContentPartDefinitionDisplayDriver, MyTestPartSettingsDisplayDriver>();
             services.AddScoped<IDataMigration, Migrations>();
             services.AddScoped<IContentPartHandler, MyTestPartHandler>();
 #endif
         }
 
-        public override void Configure(IApplicationBuilder builder, IRouteBuilder routes, IServiceProvider serviceProvider)
+        public override void Configure(IApplicationBuilder builder, IEndpointRouteBuilder routes, IServiceProvider serviceProvider)
         {
-            routes.MapAreaRoute(
+            routes.MapAreaControllerRoute(
                 name: "Home",
                 areaName: "OrchardCore.Templates.Cms.Module",
-                template: "Home/Index",
+                pattern: "Home/Index",
                 defaults: new { controller = "Home", action = "Index" }
             );
         }
